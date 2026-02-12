@@ -97,10 +97,10 @@ function nextQuestion() {
 
 function showScore() {
     // Hide quiz section
-    document.getElementById('quiz-section').classList.add('hidden');
+    document.getElementById('quiz-container').classList.add('hidden');
     
     // Show score section
-    document.getElementById('score-section').classList.remove('hidden');
+    document.getElementById('score-container').classList.remove('hidden');
     
     // Display the score
     document.getElementById('score-display').textContent = `${score}/${quizData.length}`;
@@ -112,10 +112,10 @@ function restartQuiz() {
     score = 0;
     
     // Hide score section
-    document.getElementById('score-section').classList.add('hidden');
+    document.getElementById('score-container').classList.add('hidden');
     
     // Show quiz section
-    document.getElementById('quiz-section').classList.remove('hidden');
+    document.getElementById('quiz-container').classList.remove('hidden');
     
     // Display first question
     displayQuestion(quizData[currentQuestionIndex]);
