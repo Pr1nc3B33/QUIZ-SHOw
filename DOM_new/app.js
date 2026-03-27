@@ -63,6 +63,10 @@ function displayQuestion(question) {
     const optionsContainer = document.querySelector('#options-container');
     optionsContainer.innerHTML = ''; // Clear existing buttons
     
+    // Hide next button until an answer is selected
+    const nextButton = document.getElementById('next-button');
+    nextButton.classList.add('hidden');
+    
     // Loop over options and create a button for each
     question.options.forEach((option, index) => {
         const optionButton = document.createElement('button');
@@ -74,14 +78,26 @@ function displayQuestion(question) {
 
 function selectOption(selectedIndex) {
     const correctAnswer = quizData[currentQuestionIndex].answer;
+    const optionsContainer = document.querySelector('#options-container');
+    const buttons = optionsContainer.querySelectorAll('button');
     
-    // Check if the selected answer is correct
+    // Disable all buttons after selection
+    buttons.forEach(button => button.disabled = true);
+    
+    // Add visual feedback
     if (selectedIndex === correctAnswer) {
+        // Correct answer - show green
+        buttons[selectedIndex].classList.add('correct');
         score++;
+    } else {
+        // Incorrect answer - show red for selected, green for correct
+        buttons[selectedIndex].classList.add('incorrect');
+        buttons[correctAnswer].classList.add('correct');
     }
     
-    // Move to next question
-    nextQuestion();
+    // Show the Next Question button
+    const nextButton = document.getElementById('next-button');
+    nextButton.classList.remove('hidden');
 }
 
 function nextQuestion() {
@@ -97,13 +113,18 @@ function nextQuestion() {
 
 function showScore() {
     // Hide quiz section
-    document.getElementById('quiz-container').classList.add('hidden');
+    const quizSection = document.getElementById('quiz-container');
+    quizSection.classList.add('hidden');
     
     // Show score section
-    document.getElementById('score-container').classList.remove('hidden');
+    const scoreSection = document.getElementById('score-container');
+    scoreSection.classList.remove('hidden');
     
     // Display the score
-    document.getElementById('score-display').textContent = `${score}/${quizData.length}`;
+    const scoreDisplay = document.getElementById('score-display');
+    scoreDisplay.textContent = `${score}/${quizData.length}`;
+    
+    console.log('Score screen displayed:', score, '/', quizData.length);
 }
 
 function restartQuiz() {
@@ -112,17 +133,21 @@ function restartQuiz() {
     score = 0;
     
     // Hide score section
-    document.getElementById('score-container').classList.add('hidden');
+    const scoreSection = document.getElementById('score-container');
+    scoreSection.classList.add('hidden');
     
     // Show quiz section
-    document.getElementById('quiz-container').classList.remove('hidden');
+    const quizSection = document.getElementById('quiz-container');
+    quizSection.classList.remove('hidden');
     
     // Display first question
     displayQuestion(quizData[currentQuestionIndex]);
+    console.log('Quiz restarted');
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     displayQuestion(quizData[currentQuestionIndex]);
+    document.getElementById('next-button').addEventListener('click', nextQuestion);
     document.getElementById('restart-button').addEventListener('click', restartQuiz);
 });
